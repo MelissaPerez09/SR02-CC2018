@@ -39,12 +39,12 @@ int main(int argc, char* argv[]) {
     glm::vec3 scaleFactor(1.0f, 1.0f, 1.0f);
 
     glm::mat4 translation = glm::translate(glm::mat4(1.0f), translationVector);
-    glm::mat4 scale = glm::scale(glm::mat4(0.1f), scaleFactor);
+    glm::mat4 scale = glm::scale(glm::mat4(1.0f), scaleFactor);
 
     // Initialize a Camera object
     Camera camera;
-    camera.cameraPosition = glm::vec3(0.0f, 0.0f, 7.0f);
-    camera.targetPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    camera.cameraPosition = glm::vec3(0.0f, 0.0f, 7.0f); // Ajusta la distancia de la cámara
+    camera.targetPosition = glm::vec3(0.0f, 0.0f, 0.0f); // Centra la cámara en el objeto
     camera.upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 
     // Projection matrix
@@ -74,11 +74,15 @@ int main(int argc, char* argv[]) {
         // Calculate the model matrix
         uniforms.model = translation * rotation * scale;
 
+        // Calculate the position of the camera (centered on the object)
+        glm::vec4 objectCenter = uniforms.model * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+        glm::vec3 cameraPosition = glm::vec3(objectCenter) + glm::vec3(0.0f, 0.0f, 7.0f);
+
         // Create the view matrix using the Camera object
         uniforms.view = glm::lookAt(
-            camera.cameraPosition, // The position of the camera
-            camera.targetPosition, // The point the camera is looking at
-            camera.upVector        // The up vector defining the camera's orientation
+            cameraPosition, // The position of the camera (centered on the object)
+            glm::vec3(objectCenter), // The point the camera is looking at (center of the object)
+            camera.upVector
         );
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
