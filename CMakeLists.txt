@@ -16,7 +16,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
 find_package(SDL2 REQUIRED)
 
 # find all .cpp files in the src directory
-file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+file(GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/src/main.cpp)
 
 # add the executable
 add_executable(SR ${SOURCE_FILES})
